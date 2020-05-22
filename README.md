@@ -38,6 +38,8 @@ PNP has a fallback that all dependencies declared in your `package.json` will ac
 When package `a` requires `b`, but `a` doesn't declare `b` as dependency, it will fail unless `b` is declared
 as a dependency in user's `package.json`.
 
+To fix them, docusaurus needs to use `require.resolve` to load these presets and plugins.
+
 ### Step 5: Add `"@yarnpkg/pnpify"`
 
 ```bash
