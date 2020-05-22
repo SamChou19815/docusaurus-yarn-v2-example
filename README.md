@@ -1,33 +1,57 @@
-# Website
+# docusaurus-yarn-v2-example
 
-This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
+## Rationale
 
-### Installation
+Docusaurus v2 doesn't work with Yarn v2 in pnp mode out of the box.
 
-```
-$ yarn
-```
+This repo shows you what (hacks) need to be done.
 
-### Local Development
+It also shows what needs to be properly declared as dependencies in docusaurus v2.
 
-```
-$ yarn start
-```
+## Steps and explanations
 
-This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.
+### Step 1: Initialize Docusaurus v2
 
-### Build
+See [official docs](https://v2.docusaurus.io/docs/installation)
 
-```
-$ yarn build
-```
+### Step 2: Initialize Yarn v2
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-```
-$ GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
+```bash
+yarn set version berry
+yarn install
 ```
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+### Step 3: Use `pnpMode: loose`
+
+Append line `pnpMode: loose` to `.yarnrc.yml`.
+
+Reason: Docusaurus relies on a lot of packages that doesn't properly declare their dependencies.
+Using the default strict mode isn't possible.
+
+### Step 4: Add a bunch of `devDependencies`
+
+```bash
+yarn add --dev "@babel/plugin-syntax-dynamic-import" "@babel/plugin-transform-runtime" "@babel/preset-env" "@babel/preset-react" "@babel/preset-typescript" "babel-plugin-dynamic-import-node"
+```
+
+PNP has a fallback that all dependencies declared in your `package.json` will act as fallback.
+When package `a` requires `b`, but `a` doesn't declare `b` as dependency, it will fail unless `b` is declared
+as a dependency in user's `package.json`.
+
+### Step 5: Add `"@yarnpkg/pnpify"`
+
+```bash
+yarn add --dev "@yarnpkg/pnpify"
+```
+
+At this point, there is still some broken dependencies that tried to do some crazy stuff.
+I don't spend time investigating what they are doing, but using `pnpify` that simulates an in-memory `node_modules` helps
+to solve the issue.
+
+### Step 6: Append `pnpify` to all scripts
+
+This step actually uses `pnpify`.
+
+### Step 7: Profit
+
+Now `yarn start` and `yarn build` can work.
