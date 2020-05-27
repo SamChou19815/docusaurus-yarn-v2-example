@@ -2,11 +2,13 @@
 
 ## Rationale
 
-Docusaurus v2 doesn't work with Yarn v2 in pnp mode out of the box.
+Docusaurus v2 doesn't work with Yarn v2 in pnp strict mode out of the box.
 
 This repo shows you what (hacks) need to be done.
 
-It also shows what needs to be properly declared as dependencies in docusaurus v2.
+Note: More hacks needs to be done before v2-alpha-55. If you are using anything older than
+v2-alpha-56, read 
+[the old guide](https://github.com/SamChou19815/docusaurus-yarn-v2-example/tree/docusaurus-v2-alpha-55).
 
 ## Steps and explanations
 
